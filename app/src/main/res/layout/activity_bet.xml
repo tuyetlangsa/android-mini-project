@@ -1,10 +1,246 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BetActivity">
+    android:orientation="vertical"
+    android:background="#FFE9D6"
+    android:padding="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🎲 ĐẶT CƯỢC NGỰA 🐎"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#FF5722"
+        android:gravity="center"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Hiển thị số dư -->
+    <TextView
+        android:id="@+id/tv_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Số dư: 1000$"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#4CAF50"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Khối danh sách ngựa -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- Template Card ngựa -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.18"
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="#FFF3E0"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:gravity="center_vertical">
+
+                <CheckBox
+                    android:id="@+id/cb_horse1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🐎 Ngựa 1"
+                    android:textColor="#E91E63"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/et_bet1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:hint="💰 Số tiền"
+                    android:textSize="16sp"
+                    android:inputType="number"
+                    android:backgroundTint="#E91E63" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Tương tự cho ngựa 2-5, chỉ thay màu -->
+        <!-- Ngựa 2 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.18"
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="#E3F2FD"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:gravity="center_vertical">
+
+                <CheckBox
+                    android:id="@+id/cb_horse2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🐎 Ngựa 2"
+                    android:textColor="#2196F3"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/et_bet2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:hint="💰 Số tiền"
+                    android:textSize="16sp"
+                    android:inputType="number"
+                    android:backgroundTint="#2196F3" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Ngựa 3 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.18"
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="#E8F5E9"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:gravity="center_vertical">
+
+                <CheckBox
+                    android:id="@+id/cb_horse3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🐎 Ngựa 3"
+                    android:textColor="#4CAF50"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/et_bet3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:hint="💰 Số tiền"
+                    android:textSize="16sp"
+                    android:inputType="number"
+                    android:backgroundTint="#4CAF50" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Ngựa 4 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.18"
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="#F3E5F5"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:gravity="center_vertical">
+
+                <CheckBox
+                    android:id="@+id/cb_horse4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🐎 Ngựa 4"
+                    android:textColor="#9C27B0"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/et_bet4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:hint="💰 Số tiền"
+                    android:textSize="16sp"
+                    android:inputType="number"
+                    android:backgroundTint="#9C27B0" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Ngựa 5 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.18"
+            app:cardBackgroundColor="#FFEBEE"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:gravity="center_vertical">
+
+                <CheckBox
+                    android:id="@+id/cb_horse5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🐎 Ngựa 5"
+                    android:textColor="#F44336"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/et_bet5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:hint="💰 Số tiền"
+                    android:textSize="16sp"
+                    android:inputType="number"
+                    android:backgroundTint="#F44336" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+    <!-- Nút Đặt cược -->
+    <Button
+        android:id="@+id/btn_bet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="14dp"
+        android:text="🚀 Đặt cược ngay!"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:backgroundTint="#FF9800"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="12dp" />
+
+</LinearLayout>
