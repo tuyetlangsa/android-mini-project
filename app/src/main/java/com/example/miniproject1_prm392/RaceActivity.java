@@ -1,7 +1,7 @@
 package com.example.miniproject1_prm392;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class RaceActivity extends AppCompatActivity {
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
