@@ -14,6 +14,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText inputUsername, inputPassword;
     private Button btnLogin;
+    private Button btnGoToSignUp; // new button for navigation
     private CheckBox rememberMe;
     private TextView forgotPassword;
 
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
         inputUsername = findViewById(R.id.inputUsername);
         inputPassword = findViewById(R.id.inputPassword);
         btnLogin = findViewById(R.id.btnLogin);
+        btnGoToSignUp = findViewById(R.id.btnGoToSignUp); // map new button
         rememberMe = findViewById(R.id.rememberMe);
         forgotPassword = findViewById(R.id.forgotPassword);
 
@@ -58,5 +60,13 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(LoginActivity.this, "Forgot Password clicked!", Toast.LENGTH_SHORT).show();
             // Có thể mở sang 1 Activity reset password ở đây
         });
+
+        // Xử lý đi tới màn hình Sign Up
+        if (btnGoToSignUp != null) {
+            btnGoToSignUp.setOnClickListener(v -> {
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(intent);
+            });
+        }
     }
 }

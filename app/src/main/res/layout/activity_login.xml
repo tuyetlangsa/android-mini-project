@@ -113,5 +113,16 @@
             android:textColor="@android:color/white"
             android:textStyle="bold" />
 
+        <!-- Sign Up Navigation Button (hard-coded text) -->
+        <Button
+            android:id="@+id/btnGoToSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Create New Account"
+            android:textStyle="bold"
+            android:backgroundTint="@android:color/holo_green_dark"
+            android:textColor="@android:color/white" />
+
     </LinearLayout>
 </LinearLayout>
