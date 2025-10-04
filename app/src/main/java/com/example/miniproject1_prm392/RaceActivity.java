@@ -2,6 +2,7 @@ package com.example.miniproject1_prm392;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -75,6 +76,7 @@ public class RaceActivity extends AppCompatActivity {
         seekBar5 = findViewById(R.id.seekBar5);
         btnStart = findViewById(R.id.btnStart);
         btnReset = findViewById(R.id.btnReset);
+        btnMute = findViewById(R.id.btnMute);
         tvCountdown = findViewById(R.id.tvCountdown);
     }
     private void setupUI() {
@@ -295,6 +297,15 @@ public class RaceActivity extends AppCompatActivity {
         if (btnReset != null) {
             btnReset.setVisibility(View.VISIBLE);
         }
-
+        // Mở màn hình kết quả
+        showRaceResultScreen();
+    }
+    // Add this field to RaceActivity
+    private int playerSelectedHorse = 0; // Player's chosen horse
+    private void showRaceResultScreen() {
+        Intent intent = new Intent(this, RaceResultActivity.class);
+        intent.putIntegerArrayListExtra("finishedHorses", finishedHorses);
+        intent.putExtra("playerChoice", playerSelectedHorse); // Pass player's choice
+        startActivity(intent);
     }
 }

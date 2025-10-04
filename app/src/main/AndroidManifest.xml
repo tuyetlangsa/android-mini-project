@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MiniProject1PRM392">
         <activity
+            android:name=".RaceResultActivity"
+            android:exported="false" />
+        <activity
             android:name=".RaceActivity"
             android:exported="false" />
         <activity
