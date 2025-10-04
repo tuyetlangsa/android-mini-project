@@ -28,8 +28,6 @@ public class LoginActivity extends AppCompatActivity {
         inputPassword = findViewById(R.id.inputPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnGoToSignUp = findViewById(R.id.btnGoToSignUp); // map new button
-        rememberMe = findViewById(R.id.rememberMe);
-        forgotPassword = findViewById(R.id.forgotPassword);
 
         // Xử lý khi bấm login
         btnLogin.setOnClickListener(v -> {
@@ -41,24 +39,13 @@ public class LoginActivity extends AppCompatActivity {
             } else if (username.equals("admin") && password.equals("123")) {
                 Toast.makeText(LoginActivity.this, "Login Success!", Toast.LENGTH_SHORT).show();
 
-                // Nếu tick Remember Me
-                if (rememberMe.isChecked()) {
-                    Toast.makeText(LoginActivity.this, "Remember Me checked", Toast.LENGTH_SHORT).show();
-                }
-
-                // Chuyển qua HomePageActivity
-                Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                // Chuyển qua Bet88
+                Intent intent = new Intent(LoginActivity.this,BetActivity.class);
                 startActivity(intent);
                 finish(); // đóng LoginActivity để tránh quay lại
             } else {
                 Toast.makeText(LoginActivity.this, "Invalid Username or Password", Toast.LENGTH_SHORT).show();
             }
-        });
-
-        // Xử lý khi bấm "Forgot password"
-        forgotPassword.setOnClickListener(v -> {
-            Toast.makeText(LoginActivity.this, "Forgot Password clicked!", Toast.LENGTH_SHORT).show();
-            // Có thể mở sang 1 Activity reset password ở đây
         });
 
         // Xử lý đi tới màn hình Sign Up
