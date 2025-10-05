@@ -106,7 +106,7 @@ public class RaceResultActivity extends AppCompatActivity {
         for (Bet bet : playerBets) {
             if (bet.getHorseIndex() == winnerIndex) {
                 // Thắng cược
-                totalWinnings += bet.getAmount() * winRate;
+                totalWinnings += bet.getAmount() * (winRate-1);
             } else {
                 // Thua cược
                 totalLosses += bet.getAmount();
