@@ -232,7 +232,7 @@ public class RaceActivity extends AppCompatActivity {
 
                     if (currentProgress < finishLine) {
                         allFinished = false;
-                        int speedVariation = random.nextInt(1);
+                        int speedVariation = random.nextInt(3);
                         int newProgress = Math.min(currentProgress + horseSpeeds[i] + speedVariation, finishLine);
                         seekBars[i].setProgress(newProgress);
 
