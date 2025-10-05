@@ -14,7 +14,7 @@
         android:id="@+id/imgLogo"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:src="@mipmap/ic_launcher"
+        android:src="@mipmap/img"
         android:contentDescription="App Logo"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
