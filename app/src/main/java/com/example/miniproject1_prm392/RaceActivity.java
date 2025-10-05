@@ -112,6 +112,7 @@ public class RaceActivity extends AppCompatActivity {
             tvCountdown.setTextColor(Color.parseColor("#F59E0B"));
             tvCountdown.setVisibility(View.GONE);
         }
+        setSeekBarsEnabled(false);
     }
 
     private void initMediaPlayers() {
@@ -160,7 +161,6 @@ public class RaceActivity extends AppCompatActivity {
         finishedHorses.clear();
         btnStart.setEnabled(false);
         btnStart.setAlpha(0.5f);
-
 
         startCountdown();
     }
@@ -274,6 +274,13 @@ public class RaceActivity extends AppCompatActivity {
                     backgroundMusicPlayer.start();
                 }
             }
+        }
+    }
+
+    private void setSeekBarsEnabled(boolean isEnabled) {
+        SeekBar[] seekBars = {seekBar1, seekBar2, seekBar3, seekBar4, seekBar5};
+        for (SeekBar sb : seekBars) {
+            sb.setEnabled(isEnabled);
         }
     }
     private void endRace() {
