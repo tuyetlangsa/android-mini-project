@@ -58,7 +58,7 @@ public class BetActivity extends AppCompatActivity {
         };
 
         btnBet = findViewById(R.id.btn_bet);
-
+        setHorseNamesOnCheckBoxes();
         btnBet.setOnClickListener(v -> {
             List<Bet> bets = getSelectedBets();
             int totalBetAmount = 0;
@@ -82,6 +82,13 @@ public class BetActivity extends AppCompatActivity {
         });
     }
 
+    private void setHorseNamesOnCheckBoxes() {
+        if (horseChecks.length == horseNames.length) {
+            for (int i = 0; i < horseChecks.length; i++) {
+                horseChecks[i].setText(horseNames[i]);
+            }
+        }
+    }
     private List<Bet> getSelectedBets() {
         List<Bet> bets = new ArrayList<>();
 
