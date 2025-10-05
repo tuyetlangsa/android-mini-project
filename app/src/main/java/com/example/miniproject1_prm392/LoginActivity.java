@@ -17,8 +17,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnGoToSignUp;
     private CheckBox rememberMe;
     private TextView forgotPassword;
-    private String registeredUsername;
-    private String registeredPassword;
+    private String registeredUsername = "admin";
+    private String registeredPassword = "123";
     private String registeredEmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
