@@ -14,7 +14,7 @@
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="🎲 ĐẶT CƯỢC NGỰA 🐎"
+        android:text="🎲 ĐẶT CƯỢC LỢN 🐷"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="#FF5722"
@@ -33,14 +33,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
-    <!-- Khối danh sách ngựa -->
+    <!-- Khối danh sách lợn -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <!-- Template Card ngựa -->
+        <!-- Lợn 1 -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -61,7 +61,7 @@
                     android:id="@+id/cb_horse1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🐎 Ngựa 1"
+                    android:text="🐷 Lợn 1"
                     android:textColor="#E91E63"
                     android:textSize="18sp" />
 
@@ -78,8 +78,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Tương tự cho ngựa 2-5, chỉ thay màu -->
-        <!-- Ngựa 2 -->
+        <!-- Lợn 2 -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -100,7 +99,7 @@
                     android:id="@+id/cb_horse2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🐎 Ngựa 2"
+                    android:text="🐷 Lợn 2"
                     android:textColor="#2196F3"
                     android:textSize="18sp" />
 
@@ -117,7 +116,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Ngựa 3 -->
+        <!-- Lợn 3 -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -138,7 +137,7 @@
                     android:id="@+id/cb_horse3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🐎 Ngựa 3"
+                    android:text="🐷 Lợn 3"
                     android:textColor="#4CAF50"
                     android:textSize="18sp" />
 
@@ -155,7 +154,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Ngựa 4 -->
+        <!-- Lợn 4 -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -176,7 +175,7 @@
                     android:id="@+id/cb_horse4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🐎 Ngựa 4"
+                    android:text="🐷 Lợn 4"
                     android:textColor="#9C27B0"
                     android:textSize="18sp" />
 
@@ -193,7 +192,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Ngựa 5 -->
+        <!-- Lợn 5 -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -213,7 +212,7 @@
                     android:id="@+id/cb_horse5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🐎 Ngựa 5"
+                    android:text="🐷 Lợn 5"
                     android:textColor="#F44336"
                     android:textSize="18sp" />
 
