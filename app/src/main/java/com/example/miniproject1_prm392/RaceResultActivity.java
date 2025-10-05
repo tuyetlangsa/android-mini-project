@@ -14,11 +14,11 @@ import java.util.Locale;
 public class RaceResultActivity extends AppCompatActivity {
 
     private String[] horseNames = {
-            "🐷 Red Thunderss",
-            "🐷 Blue Lightning",
-            "🐷 Green Storm",
-            "🐷 Golden Wind",
-            "🐷 Purple Dash"
+            "🐴 Red Thunderss",
+            "🐎 Blue Lightning",
+            "🐴 Green Storm",
+            "🐎 Golden Wind",
+            "🐴 Purple Dash"
     };
 
 

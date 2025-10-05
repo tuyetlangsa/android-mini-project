@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="🐷 CUỘC ĐUA LỢN"
+        android:text="🐎 CUỘC ĐUA NGỰA"
         android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="#F59E0B"
