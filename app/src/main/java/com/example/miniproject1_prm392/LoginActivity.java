@@ -14,45 +14,60 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText inputUsername, inputPassword;
     private Button btnLogin;
-    private Button btnGoToSignUp; // new button for navigation
+    private Button btnGoToSignUp;
     private CheckBox rememberMe;
     private TextView forgotPassword;
-
+    private String registeredUsername;
+    private String registeredPassword;
+    private String registeredEmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login); // layout bạn paste ở trên
+        setContentView(R.layout.activity_login);
 
-        // Ánh xạ view
         inputUsername = findViewById(R.id.inputUsername);
         inputPassword = findViewById(R.id.inputPassword);
         btnLogin = findViewById(R.id.btnLogin);
-        btnGoToSignUp = findViewById(R.id.btnGoToSignUp); // map new button
+        btnGoToSignUp = findViewById(R.id.btnGoToSignUp);
 
-        // Xử lý khi bấm login
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("username")) {
+            registeredUsername = intent.getStringExtra("username");
+            registeredPassword = intent.getStringExtra("password");
+            registeredEmail = intent.getStringExtra("email");
+
+        }
+
         btnLogin.setOnClickListener(v -> {
-            String username = inputUsername.getText().toString().trim();
+            String usernameOrEmail = inputUsername.getText().toString().trim();
             String password = inputPassword.getText().toString().trim();
 
-            if (username.isEmpty() || password.isEmpty()) {
+            if (usernameOrEmail.isEmpty() || password.isEmpty()) {
                 Toast.makeText(LoginActivity.this, "Please enter username and password", Toast.LENGTH_SHORT).show();
-            } else if (username.equals("admin") && password.equals("123")) {
-                Toast.makeText(LoginActivity.this, "Login Success!", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                // Chuyển qua Bet88
-                Intent intent = new Intent(LoginActivity.this,BetActivity.class);
-                startActivity(intent);
-                finish(); // đóng LoginActivity để tránh quay lại
+            if (registeredUsername == null || registeredPassword == null) {
+                Toast.makeText(LoginActivity.this, "No account found. Please sign up.", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(LoginActivity.this, "Invalid Username or Password", Toast.LENGTH_SHORT).show();
+                boolean isValidLogin = (usernameOrEmail.equals(registeredUsername) || usernameOrEmail.equals(registeredEmail))
+                        && password.equals(registeredPassword);
+
+                if (isValidLogin) {
+                    Toast.makeText(LoginActivity.this, "Login Success!", Toast.LENGTH_SHORT).show();
+                    Intent homeIntent = new Intent(LoginActivity.this, HomePageActivity.class);
+                    startActivity(homeIntent);
+                    finish();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Invalid Username or Password", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
-        // Xử lý đi tới màn hình Sign Up
         if (btnGoToSignUp != null) {
             btnGoToSignUp.setOnClickListener(v -> {
-                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-                startActivity(intent);
+                Intent signUpIntent = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(signUpIntent);
             });
         }
     }

@@ -13,36 +13,37 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import java.util.ArrayList;
 import java.util.Random;
 
 public class RaceActivity extends AppCompatActivity {
 
     private SeekBar seekBar1, seekBar2, seekBar3, seekBar4, seekBar5;
-    private Button btnStart, btnReset, btnMute;
-    private TextView tvCountdown;
+    private Button btnStart, btnMute;
+    private TextView tvCountdown, name1, name2, name3, name4, name5;
     private LinearLayout mainLayout;
 
     private Handler handler = new Handler(Looper.getMainLooper());
-
     private Random random = new Random();
-    private MediaPlayer mediaPlayer;
+
+    private MediaPlayer backgroundMusicPlayer;
+    private MediaPlayer raceMusicPlayer;
+    private MediaPlayer finishSoundPlayer;
 
     private boolean isRacing = false;
     private boolean isMuted = false;
     private int[] horseSpeeds = new int[5];
     private ArrayList<Integer> finishedHorses = new ArrayList<>();
     private int finishLine = 100;
-
+    ArrayList<Bet> playerBets ;
+    private double currentBalance;
     private String[] horseNames = {
-            "🐴 Red Thunder",
+            "🐴 Red Thunderss",
             "🐎 Blue Lightning",
             "🐴 Green Storm",
             "🐎 Golden Wind",
@@ -62,9 +63,14 @@ public class RaceActivity extends AppCompatActivity {
         });
 
         initViews();
+        Intent intent = getIntent();
+        playerBets = (ArrayList<Bet>) intent.getSerializableExtra("playerBets");
+        currentBalance = intent.getDoubleExtra("CURRENT_BALANCE", 0.0);
         setupUI();
         setupListeners();
-        initMediaPlayer();
+
+        initMediaPlayers();
+        playBackgroundMusic();
     }
 
     private void initViews() {
@@ -75,29 +81,31 @@ public class RaceActivity extends AppCompatActivity {
         seekBar4 = findViewById(R.id.seekBar4);
         seekBar5 = findViewById(R.id.seekBar5);
         btnStart = findViewById(R.id.btnStart);
-        btnReset = findViewById(R.id.btnReset);
         btnMute = findViewById(R.id.btnMute);
         tvCountdown = findViewById(R.id.tvCountdown);
+        name1 = findViewById(R.id.name1);
+        name2= findViewById(R.id.name2);
+        name3 = findViewById(R.id.name3);
+        name4 = findViewById(R.id.name4);
+        name5 = findViewById(R.id.name5);
     }
     private void setupUI() {
-        // Màu nền gradient
+        name1.setText(horseNames[0]);
+        name2.setText(horseNames[1]);
+        name3.setText(horseNames[2]);
+        name4.setText(horseNames[3]);
+        name5.setText(horseNames[4]);
         mainLayout.setBackgroundColor(Color.parseColor("#1E293B"));
         btnStart.setBackgroundColor(Color.parseColor("#10B981"));
         btnStart.setTextColor(Color.WHITE);
         btnStart.setTextSize(18);
         btnStart.setPadding(40, 20, 40, 20);
 
-        if (btnReset != null) {
-            btnReset.setBackgroundColor(Color.parseColor("#EF4444"));
-            btnReset.setTextColor(Color.WHITE);
-            btnReset.setVisibility(View.GONE);
-        }
 
         if (btnMute != null) {
             btnMute.setBackgroundColor(Color.parseColor("#6366F1"));
             btnMute.setTextColor(Color.WHITE);
         }
-
 
         if (tvCountdown != null) {
             tvCountdown.setTextSize(72);
@@ -106,57 +114,43 @@ public class RaceActivity extends AppCompatActivity {
         }
     }
 
-    private void initMediaPlayer() {
+    private void initMediaPlayers() {
         try {
-            // Sử dụng nhạc mặc định của hệ thống hoặc thêm file vào res/raw
-            // mediaPlayer = MediaPlayer.create(this, R.raw.race_music);
-            // Tạm thời dùng notification sound
-            mediaPlayer = MediaPlayer.create(this,
-                    android.provider.Settings.System.DEFAULT_NOTIFICATION_URI);
-            if (mediaPlayer != null) {
-                mediaPlayer.setLooping(true);
-                mediaPlayer.setVolume(0.3f, 0.3f);
+            backgroundMusicPlayer = MediaPlayer.create(this, R.raw.background_music);
+            if (backgroundMusicPlayer != null) {
+                backgroundMusicPlayer.setLooping(true);
+                backgroundMusicPlayer.setVolume(0.5f, 0.5f);
             }
+
+            raceMusicPlayer = MediaPlayer.create(this, R.raw.race_music);
+            if (raceMusicPlayer != null) {
+                raceMusicPlayer.setLooping(true);
+                raceMusicPlayer.setVolume(1.0f, 1.0f);
+            }
+
+            finishSoundPlayer = MediaPlayer.create(this, R.raw.finish_sound);
+            if (finishSoundPlayer != null) {
+                finishSoundPlayer.setLooping(false); // Chỉ phát một lần
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void playBackgroundMusic() {
+        if (backgroundMusicPlayer != null && !backgroundMusicPlayer.isPlaying() && !isMuted) {
+            backgroundMusicPlayer.start();
         }
     }
 
     private void setupListeners() {
         btnStart.setOnClickListener(v -> startRace());
 
-        if (btnReset != null) {
-            btnReset.setOnClickListener(v -> resetRace());
-        }
-
         if (btnMute != null) {
             btnMute.setOnClickListener(v -> toggleMute());
         }
     }
-
-    private void resetRace() {
-        isRacing = false;
-        finishedHorses.clear();
-
-        SeekBar[] seekBars = {seekBar1, seekBar2, seekBar3, seekBar4, seekBar5};
-        for (SeekBar sb : seekBars) {
-            sb.setProgress(0);
-        }
-
-        btnStart.setVisibility(View.VISIBLE);
-        btnStart.setEnabled(true);
-        btnStart.setAlpha(1.0f);
-
-        if (btnReset != null) {
-            btnReset.setVisibility(View.GONE);
-        }
-
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-            mediaPlayer.seekTo(0);
-        }
-    }
-
 
 
     private void startRace() {
@@ -167,11 +161,7 @@ public class RaceActivity extends AppCompatActivity {
         btnStart.setEnabled(false);
         btnStart.setAlpha(0.5f);
 
-        if (btnReset != null) {
-            btnReset.setVisibility(View.GONE);
-        }
 
-        // Countdown
         startCountdown();
     }
     private void startCountdown() {
@@ -187,7 +177,6 @@ public class RaceActivity extends AppCompatActivity {
                 if (count[0] > 0) {
                     if (tvCountdown != null) {
                         tvCountdown.setText(String.valueOf(count[0]));
-                        // Animation
                         ObjectAnimator scaleX = ObjectAnimator.ofFloat(tvCountdown, "scaleX", 0.5f, 1.5f, 1.0f);
                         ObjectAnimator scaleY = ObjectAnimator.ofFloat(tvCountdown, "scaleY", 0.5f, 1.5f, 1.0f);
                         scaleX.setDuration(1000);
@@ -214,22 +203,16 @@ public class RaceActivity extends AppCompatActivity {
         handler.post(countdownRunnable);
     }
 
-
     private void beginRace() {
-        // Random speeds cho mỗi con ngựa
         for (int i = 0; i < 5; i++) {
-            horseSpeeds[i] = random.nextInt(3) + 2; // Speed từ 2-4
+            horseSpeeds[i] = random.nextInt(2) + 1;
         }
 
-        // Play music
-        if (mediaPlayer != null && !isMuted) {
-            try {
-                if (!mediaPlayer.isPlaying()) {
-                    mediaPlayer.start();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (backgroundMusicPlayer != null && backgroundMusicPlayer.isPlaying()) {
+            backgroundMusicPlayer.pause();
+        }
+        if (raceMusicPlayer != null && !raceMusicPlayer.isPlaying() && !isMuted) {
+            raceMusicPlayer.start();
         }
 
         raceRunnable.run();
@@ -249,12 +232,10 @@ public class RaceActivity extends AppCompatActivity {
 
                     if (currentProgress < finishLine) {
                         allFinished = false;
-                        // Random variation cho realistic hơn
-                        int speedVariation = random.nextInt(2);
+                        int speedVariation = random.nextInt(1);
                         int newProgress = Math.min(currentProgress + horseSpeeds[i] + speedVariation, finishLine);
                         seekBars[i].setProgress(newProgress);
 
-                        // Check if finished
                         if (newProgress >= finishLine) {
                             finishedHorses.add(i);
                         }
@@ -276,36 +257,64 @@ public class RaceActivity extends AppCompatActivity {
             btnMute.setText(isMuted ? "🔇 Bật nhạc" : "🔊 Tắt nhạc");
         }
 
-        if (mediaPlayer != null) {
-            if (isMuted) {
-                mediaPlayer.setVolume(0, 0);
+        if (isMuted) {
+            if (backgroundMusicPlayer != null && backgroundMusicPlayer.isPlaying()) {
+                backgroundMusicPlayer.pause();
+            }
+            if (raceMusicPlayer != null && raceMusicPlayer.isPlaying()) {
+                raceMusicPlayer.pause();
+            }
+        } else {
+            if (isRacing) {
+                if (raceMusicPlayer != null && !raceMusicPlayer.isPlaying()) {
+                    raceMusicPlayer.start();
+                }
             } else {
-                mediaPlayer.setVolume(0.3f, 0.3f);
+                if (backgroundMusicPlayer != null && !backgroundMusicPlayer.isPlaying()) {
+                    backgroundMusicPlayer.start();
+                }
             }
         }
     }
     private void endRace() {
         isRacing = false;
 
-        // Stop music
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-            mediaPlayer.seekTo(0);
+        if (raceMusicPlayer != null && raceMusicPlayer.isPlaying()) {
+            raceMusicPlayer.pause();
+        }
+
+        if (finishSoundPlayer != null && !isMuted) {
+            finishSoundPlayer.start();
         }
 
         btnStart.setVisibility(View.GONE);
-        if (btnReset != null) {
-            btnReset.setVisibility(View.VISIBLE);
-        }
-        // Mở màn hình kết quả
-        showRaceResultScreen();
+
+        handler.postDelayed(this::showRaceResultScreen, 15000);
     }
-    // Add this field to RaceActivity
-    private int playerSelectedHorse = 0; // Player's chosen horse
+
     private void showRaceResultScreen() {
         Intent intent = new Intent(this, RaceResultActivity.class);
         intent.putIntegerArrayListExtra("finishedHorses", finishedHorses);
-        intent.putExtra("playerChoice", playerSelectedHorse); // Pass player's choice
+        intent.putExtra("playerBets", playerBets);
+        intent.putExtra("CURRENT_BALANCE", currentBalance);
         startActivity(intent);
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (backgroundMusicPlayer != null) {
+            backgroundMusicPlayer.release();
+            backgroundMusicPlayer = null;
+        }
+        if (raceMusicPlayer != null) {
+            raceMusicPlayer.release();
+            raceMusicPlayer = null;
+        }
+        if (finishSoundPlayer != null) {
+            finishSoundPlayer.release();
+            finishSoundPlayer = null;
+        }
     }
 }

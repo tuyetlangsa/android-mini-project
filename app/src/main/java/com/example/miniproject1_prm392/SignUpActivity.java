@@ -34,7 +34,6 @@ public class SignUpActivity extends AppCompatActivity {
             return insets;
         });
 
-        // init views
         inputFullName = findViewById(R.id.inputFullName);
         inputUsername = findViewById(R.id.inputUsername);
         inputEmail = findViewById(R.id.inputEmail);
@@ -43,12 +42,9 @@ public class SignUpActivity extends AppCompatActivity {
         btnSignUp = findViewById(R.id.btnSignUp);
         linkLogin = findViewById(R.id.linkLogin);
 
-        // SignUp button logic
         btnSignUp.setOnClickListener(v -> registerUser());
 
-        // Go to Login screen
         linkLogin.setOnClickListener(v -> {
-            // Example: open LoginActivity
             Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
@@ -62,7 +58,6 @@ public class SignUpActivity extends AppCompatActivity {
         String password = inputPassword.getText().toString().trim();
         String confirmPassword = inputConfirmPassword.getText().toString().trim();
 
-        // validate inputs
         if (TextUtils.isEmpty(fullName)) {
             inputFullName.setError("Full name is required");
             return;
@@ -84,12 +79,14 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        // Dummy logic: save to local (replace with Firebase/SQLite/API)
         Toast.makeText(this, "Account created successfully!", Toast.LENGTH_SHORT).show();
 
-        // Example: go to LoginActivity after success
         Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+        intent.putExtra("fullName", fullName);
+        intent.putExtra("username", username);
         intent.putExtra("email", email);
+        intent.putExtra("password", password);
+
         startActivity(intent);
         finish();
     }

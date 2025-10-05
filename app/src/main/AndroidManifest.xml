@@ -15,13 +15,13 @@
             android:name=".RaceResultActivity"
             android:exported="false" />
         <activity
-            android:name=".RaceActivity"
+            android:name=".HomePageActivity"
             android:exported="false" />
         <activity
             android:name=".BetActivity"
             android:exported="false" />
         <activity
-            android:name=".HomePageActivity"
+            android:name=".RaceActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

@@ -7,76 +7,72 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class RaceResultActivity extends AppCompatActivity {
 
     private String[] horseNames = {
-            "Red Thunder",
-            "Blue Lightning",
-            "Green Storm",
-            "Golden Wind",
-            "Purple Dash"
+            "🐴 Red Thunderss",
+            "🐎 Blue Lightning",
+            "🐴 Green Storm",
+            "🐎 Golden Wind",
+            "🐴 Purple Dash"
     };
+
+    private double finalBalance; // Biến lưu số dư cuối cùng
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_race_result);
 
-        // Get finished horses from intent
+        // Lấy tất cả dữ liệu từ Intent
         Intent intent = getIntent();
         ArrayList<Integer> finishedHorses = intent.getIntegerArrayListExtra("finishedHorses");
+        ArrayList<Bet> playerBets = (ArrayList<Bet>) intent.getSerializableExtra("playerBets");
+        double initialBalance = intent.getDoubleExtra("CURRENT_BALANCE", 0.0);
 
-        // Validate data
-        if (finishedHorses != null && !finishedHorses.isEmpty()) {
-            showResults(finishedHorses);
+        // Validate dữ liệu
+        if (finishedHorses != null && !finishedHorses.isEmpty() && playerBets != null) {
+            displayRaceStandings(finishedHorses);
+            calculateAndUpdateBalance(finishedHorses, playerBets, initialBalance);
         } else {
-            // Handle error - no data received
+            // Xử lý lỗi nếu không nhận được dữ liệu
             TextView tvResultStatus = findViewById(R.id.tvResultStatus);
-            if (tvResultStatus != null) {
-                tvResultStatus.setText("Error: No race data");
-            }
+            tvResultStatus.setText("Lỗi: Không có dữ liệu cuộc đua");
         }
 
-        // Setup return button
+        // Thiết lập nút quay về trang chủ
         Button btnReturnHome = findViewById(R.id.btnReturnHome);
-        if (btnReturnHome != null) {
-            btnReturnHome.setOnClickListener(v -> {
-                finish(); // Go back to race screen
-            });
-        }
+        btnReturnHome.setOnClickListener(v -> {
+            // Tạo intent để quay về HomePageActivity
+            Intent returnIntent = new Intent(RaceResultActivity.this, HomePageActivity.class);
+
+            // Các cờ này giúp xóa các Activity trung gian (Bet, Race) và cập nhật HomePageActivity đã có
+            returnIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            // Gửi số dư cuối cùng về
+            returnIntent.putExtra("UPDATED_BALANCE", finalBalance);
+            startActivity(returnIntent);
+            finish(); // Đóng Activity hiện tại
+        });
     }
 
-    private void showResults(ArrayList<Integer> finishedHorses) {
-        // Array of TextView IDs for horse names
-        int[] nameIds = {
-                R.id.tvHorse1Name,
-                R.id.tvHorse2Name,
-                R.id.tvHorse3Name,
-                R.id.tvHorse4Name,
-                R.id.tvHorse5Name
-        };
+    /**
+     * Hiển thị bảng xếp hạng cuộc đua
+     */
+    private void displayRaceStandings(ArrayList<Integer> finishedHorses) {
+        int[] nameIds = {R.id.tvHorse1Name, R.id.tvHorse2Name, R.id.tvHorse3Name, R.id.tvHorse4Name, R.id.tvHorse5Name};
+        int[] timeIds = {R.id.tvHorse1Time, R.id.tvHorse2Time, R.id.tvHorse3Time, R.id.tvHorse4Time, R.id.tvHorse5Time};
 
-        // Array of TextView IDs for horse times
-        int[] timeIds = {
-                R.id.tvHorse1Time,
-                R.id.tvHorse2Time,
-                R.id.tvHorse3Time,
-                R.id.tvHorse4Time,
-                R.id.tvHorse5Time
-        };
-
-        // Display results in order of finish (1st, 2nd, 3rd, 4th, 5th)
-        for (int position = 0; position < finishedHorses.size() && position < 5; position++) {
+        for (int position = 0; position < finishedHorses.size(); position++) {
             int horseIndex = finishedHorses.get(position);
-
-            // Get the TextViews
             TextView nameView = findViewById(nameIds[position]);
             TextView timeView = findViewById(timeIds[position]);
 
             if (nameView != null && horseIndex >= 0 && horseIndex < horseNames.length) {
-                // Add emoji based on position
                 String emoji = "";
                 switch (position) {
                     case 0: emoji = "🥇 "; break;
@@ -84,63 +80,94 @@ public class RaceResultActivity extends AppCompatActivity {
                     case 2: emoji = "🥉 "; break;
                     default: emoji = (position + 1) + ". "; break;
                 }
-
                 nameView.setText(emoji + horseNames[horseIndex]);
             }
 
             if (timeView != null) {
-                // Generate time based on position (earlier positions = faster times)
                 double baseTime = 45.0;
                 double timeVariation = position * 1.5 + Math.random() * 0.5;
                 double finalTime = baseTime + timeVariation;
-
                 timeView.setText(String.format("Time: %.2fs", finalTime));
             }
         }
-
-        // Set winner info in the result card
-        displayWinnerInfo(finishedHorses);
-
-        // Update wallet/balance (optional)
-        updateBalance();
     }
 
-    private void displayWinnerInfo(ArrayList<Integer> finishedHorses) {
+    /**
+     * Tính toán số dư mới, cập nhật UI và hiển thị thông báo thắng/thua.
+     */
+    private void calculateAndUpdateBalance(ArrayList<Integer> finishedHorses, ArrayList<Bet> playerBets, double initialBalance) {
+        int winnerIndex = finishedHorses.get(0);
+        double totalWinnings = 0;
+        double totalLosses = 0;
+        int winRate = 2; // Tỷ lệ thắng (1 ăn 2)
+
+        // Duyệt qua các cược của người chơi
+        for (Bet bet : playerBets) {
+            if (bet.getHorseIndex() == winnerIndex) {
+                // Thắng cược
+                totalWinnings += bet.getAmount() * winRate;
+            } else {
+                // Thua cược
+                totalLosses += bet.getAmount();
+            }
+        }
+
+        // Số dư ban đầu trừ đi tổng số tiền đã cược, sau đó cộng lại tiền thắng
+        finalBalance = initialBalance - totalLosses + totalWinnings;
+
+        // Cập nhật giao diện
+        updateBalanceUI(finalBalance);
+        displayResultCard(totalWinnings, totalLosses, horseNames[winnerIndex]);
+    }
+
+    /**
+     * Hiển thị thông báo tổng kết thắng/thua trên CardView.
+     */
+    private void displayResultCard(double winnings, double losses, String winnerName) {
         CardView resultCard = findViewById(R.id.resultCard);
         TextView tvResultStatus = findViewById(R.id.tvResultStatus);
         TextView tvResultMessage = findViewById(R.id.tvResultMessage);
         TextView tvResultIcon = findViewById(R.id.tvResultIcon);
 
+        double netResult = winnings - losses;
 
-        if (finishedHorses.isEmpty()) return;
-
-        int winnerIndex = finishedHorses.get(0);
-        int playerChoice = getIntent().getIntExtra("playerChoice", 0);
-        boolean playerWon = (winnerIndex == playerChoice);
-
-        if (resultCard != null && tvResultStatus != null && tvResultMessage != null && tvResultIcon != null) {
-            if (playerWon) {
-                // Player won
-                resultCard.setCardBackgroundColor(Color.parseColor("#4CAF50")); // Green
-                tvResultIcon.setText("🎉");
-                tvResultStatus.setText("YOU WIN!");
-                tvResultMessage.setText("Your horse " + horseNames[winnerIndex] + " won!");
-            } else {
-                // Player lost
-                resultCard.setCardBackgroundColor(Color.parseColor("#F44336")); // Red
-                tvResultIcon.setText("😢");
-                tvResultStatus.setText("YOU LOSE!");
-                tvResultMessage.setText(horseNames[winnerIndex] + " won the race!");
-            }
+        if (netResult > 0) {
+            // Người chơi lời tiền
+            resultCard.setCardBackgroundColor(Color.parseColor("#4CAF50")); // Green
+            tvResultIcon.setText("🎉");
+            tvResultStatus.setText("BẠN THẮNG!");
+            tvResultMessage.setText("Bạn lời được " + formatCurrency(netResult));
+        } else if (netResult < 0) {
+            // Người chơi lỗ tiền
+            resultCard.setCardBackgroundColor(Color.parseColor("#F44336")); // Red
+            tvResultIcon.setText("😢");
+            tvResultStatus.setText("BẠN THUA!");
+            tvResultMessage.setText("Bạn lỗ " + formatCurrency(Math.abs(netResult)));
+        } else {
+            // Người chơi hòa vốn
+            resultCard.setCardBackgroundColor(Color.parseColor("#FF9800")); // Orange
+            tvResultIcon.setText("😐");
+            tvResultStatus.setText("HÒA VỐN!");
+            tvResultMessage.setText(winnerName + " đã thắng, nhưng bạn không mất tiền.");
         }
     }
 
-    private void updateBalance() {
+    /**
+     * Cập nhật TextView hiển thị số dư
+     */
+    private void updateBalanceUI(double newBalance) {
         TextView tvBalance = findViewById(R.id.tvBalance);
         if (tvBalance != null) {
-            // TODO: Calculate actual balance based on bet and result
-            // For now, just showing a sample value
-            tvBalance.setText("$1,250");
+            tvBalance.setText("Số dư mới: " + formatCurrency(newBalance));
         }
+    }
+
+    /**
+     * Định dạng số thành chuỗi tiền tệ
+     */
+    private String formatCurrency(double amount) {
+        Locale localeVN = new Locale("vi", "VN");
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(localeVN);
+        return currencyFormatter.format(amount);
     }
 }
